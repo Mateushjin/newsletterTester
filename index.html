@@ -116,7 +116,11 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 .noticia-modal-close{position:absolute;top:1rem;right:1.25rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted);line-height:1}
 .noticia-modal-cat{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);font-weight:700;margin-bottom:0.75rem}
 .noticia-modal-titulo{font-family:var(--serif);font-size:1.8rem;font-weight:900;line-height:1.25;margin-bottom:0.75rem}
-.noticia-modal-data{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.noticia-modal-data{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1rem;padding-bottom:0}
+.modal-cats{display:flex;gap:0.4rem;flex-wrap:wrap;margin:1rem 0 1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.modal-cat-btn{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;padding:0.3rem 0.75rem;border:1px solid var(--border);border-radius:20px;background:none;cursor:pointer;color:var(--muted);font-family:var(--sans);transition:all 0.2s;white-space:nowrap}
+.modal-cat-btn:hover{border-color:var(--text);color:var(--text)}
+.modal-cat-btn.active{background:var(--text);color:var(--card);border-color:var(--text)}
 .noticia-modal-body{font-size:15px;line-height:1.75;color:var(--text)}
 .noticia-modal-body h2{font-family:var(--serif);font-size:1.2rem;font-weight:700;margin:1.5rem 0 0.5rem}
 .noticia-modal-body h2:first-child{margin-top:0}
@@ -187,6 +191,7 @@ footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:
     <div class="noticia-modal-cat" id="modalCat"></div>
     <div class="noticia-modal-titulo" id="modalTitulo"></div>
     <div class="noticia-modal-data" id="modalData"></div>
+    <div class="modal-cats" id="modalCats"></div>
     <div class="noticia-modal-body" id="modalBody"></div>
   </div>
 </div>
@@ -353,11 +358,23 @@ async function fetchNoticias(){
 function openModal(id){
   const a=window._noticiasData?.find(x=>x.id===id);
   if(!a)return;
-  document.getElementById('modalCat').textContent=a.categoria||'Geral';
+  document.getElementById('modalCat').textContent=(a.categoria||'Geral').trim();
   document.getElementById('modalTitulo').textContent=a.titulo;
   document.getElementById('modalData').textContent=new Date(a.created_at).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('modalBody').innerHTML=a.conteudo||'';
   document.getElementById('noticiaModal').classList.add('open');
+  document.getElementById('noticiaModal').scrollTop=0;
+  renderModalCats(a.id);
+}
+
+function renderModalCats(activeId){
+  const data=window._noticiasData||[];
+  const cats=[...new Set(data.map(a=>(a.categoria||'Geral').trim()))];
+  document.getElementById('modalCats').innerHTML=cats.map(cat=>{
+    const latest=data.find(a=>(a.categoria||'Geral').trim()===cat);
+    const isActive=latest&&latest.id===activeId;
+    return `<button class="modal-cat-btn${isActive?' active':''}" onclick="openModal(${latest.id})">${cat}</button>`;
+  }).join('');
 }
 
 function closeModal(){document.getElementById('noticiaModal').classList.remove('open');}
