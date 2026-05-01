@@ -24,7 +24,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);transition:b
 #ticker-bar{background:var(--accent);color:#fff;font-size:11px;display:flex;align-items:center;overflow:hidden;z-index:101;position:relative}
 #ticker-label{flex-shrink:0;padding:0.4rem 1rem;font-weight:600;border-right:1px solid rgba(255,255,255,0.3);white-space:nowrap;letter-spacing:0.08em;font-size:10px;text-transform:uppercase}
 #ticker-track{flex:1;overflow:hidden;padding:0.4rem 0}
-#ticker-content{display:inline-block;white-space:nowrap;width:max-content;animation:tickerScroll 30s linear infinite;transition:opacity 0.15s ease}
+#ticker-content{display:inline-block;white-space:nowrap;animation:tickerScroll 30s linear infinite;transition:opacity 0.15s ease}
 #ticker-content:hover{animation-play-state:paused}
 .tc-wrap{position:relative;display:inline-block;cursor:pointer;overflow:hidden;height:1.2em;vertical-align:middle}
 .tc-inner{display:block;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)}
@@ -98,6 +98,9 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
 
 @media (max-width:768px){
+  #ticker-bar{font-size:10px}
+  #ticker-track{overflow:hidden;width:100%}
+  #ticker-content{animation-name:tickerScroll}
   nav{position:static;background:var(--bg);border-bottom:1px solid var(--border)}
   .nav-top{flex-wrap:wrap;justify-content:space-between;align-items:center;padding:0.75rem 1rem;position:static}
   .nav-date{order:1;flex:1}
@@ -254,7 +257,18 @@ async function fetchQuotes(){
     tData.eth={usd:d.ethereum.usd,brl:d.ethereum.brl,chg:d.ethereum.usd_24h_change};
   }catch(e){}
   renderTicker();
+  fixTickerAnimation();
 }
+
+function fixTickerAnimation(){
+  const content=document.getElementById('ticker-content');
+  const track=document.getElementById('ticker-track');
+  if(!content||!track)return;
+  const contentW=content.scrollWidth/2;
+  const duration=Math.max(20,contentW/60);
+  content.style.animationDuration=duration+'s';
+}
+window.addEventListener('resize',fixTickerAnimation);
 
 document.getElementById('ticker-content').addEventListener('click',function(e){
   const wrap=e.target.closest('.tc-wrap');
