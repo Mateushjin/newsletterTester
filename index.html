@@ -97,8 +97,12 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 
 /* NOTÍCIAS */
 .noticias-page{max-width:800px;margin:0 auto;padding:3rem 2rem}
-.noticias-header{border-bottom:2px solid var(--text);padding-bottom:1rem;margin-bottom:2rem}
+.noticias-header{border-bottom:2px solid var(--text);padding-bottom:1rem;margin-bottom:0}
 .noticias-header h2{font-family:var(--serif);font-size:2rem;font-weight:900}
+.noticias-cats{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.noticias-cat-btn{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);padding:0.75rem 1.25rem;border:none;border-bottom:2px solid transparent;background:none;cursor:pointer;white-space:nowrap;font-family:var(--sans);transition:all 0.2s;margin-bottom:-1px}
+.noticias-cat-btn:hover{color:var(--text)}
+.noticias-cat-btn.active{color:var(--text);border-bottom:2px solid var(--text)}
 .noticias-grid{display:flex;flex-direction:column;gap:0}
 .noticia-card{padding:1.5rem 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s}
 .noticia-card:hover{background:var(--surface);padding-left:0.75rem;padding-right:0.75rem;margin:0 -0.75rem;border-radius:4px}
@@ -177,6 +181,7 @@ footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:
 <div class="page" id="page-noticias">
   <div class="noticias-page">
     <div class="noticias-header"><h2>Notícias</h2></div>
+    <div class="noticias-cats" id="noticiasCats"></div>
     <div class="noticias-grid" id="noticiasGrid"><div class="noticias-loading">Carregando...</div></div>
   </div>
 </div>
@@ -330,6 +335,32 @@ setInterval(fetchQuotes,60000);
 const SB_URL='https://hzvmlrvoqhobayaglflf.supabase.co';
 const SB_KEY='sb_publishable_iwt_5ZNlRO0ztSzpLIrFrw_lw9fQ73E';
 
+function renderCats(data){
+  const cats=[...new Set(data.map(a=>(a.categoria||'Geral').trim()))].filter(Boolean);
+  const bar=document.getElementById('noticiasCats');
+  bar.innerHTML=`<button class="noticias-cat-btn active" onclick="filterCat('',this)">Todos</button>`
+    +cats.map(c=>`<button class="noticias-cat-btn" onclick="filterCat('${c}',this)">${c}</button>`).join('');
+}
+
+function renderGrid(data){
+  const grid=document.getElementById('noticiasGrid');
+  if(!data.length){grid.innerHTML='<div class="noticias-empty">Nenhuma notícia nesta categoria.</div>';return;}
+  grid.innerHTML=data.map(a=>`
+    <div class="noticia-card" onclick="openModal(${a.id})">
+      <div class="noticia-cat">${(a.categoria||'Geral').trim()}</div>
+      <div class="noticia-titulo">${a.titulo}</div>
+      ${a.conteudo?`<div class="noticia-conteudo">${a.conteudo.replace(/<[^>]*>/g,' ').trim()}</div>`:''}
+      <div class="noticia-data">${new Date(a.created_at).toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'})}</div>
+    </div>`).join('');
+}
+
+function filterCat(cat,el){
+  document.querySelectorAll('.noticias-cat-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const data=window._noticiasData||[];
+  renderGrid(cat?data.filter(a=>(a.categoria||'Geral').trim()===cat):data);
+}
+
 async function fetchNoticias(){
   const grid=document.getElementById('noticiasGrid');
   try{
@@ -339,14 +370,9 @@ async function fetchNoticias(){
     const data=await r.json();
     const valid=data.filter(a=>a.titulo&&a.titulo.trim());
     if(!valid.length){grid.innerHTML='<div class="noticias-empty">Nenhuma notícia publicada ainda.</div>';return;}
-    grid.innerHTML=valid.map(a=>`
-      <div class="noticia-card" onclick="openModal(${a.id})">
-        <div class="noticia-cat">${a.categoria||'Geral'}</div>
-        <div class="noticia-titulo">${a.titulo}</div>
-        ${a.conteudo?`<div class="noticia-conteudo">${a.conteudo}</div>`:''}
-        <div class="noticia-data">${new Date(a.created_at).toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'})}</div>
-      </div>`).join('');
     window._noticiasData=valid;
+    renderCats(valid);
+    renderGrid(valid);
   }catch(e){grid.innerHTML='<div class="noticias-empty">Erro ao carregar notícias.</div>';}
 }
 
