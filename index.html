@@ -19,76 +19,31 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);transition:background 0.3s,color 0.3s;min-height:100vh}
 
-/* TICKER */
-.ticker{background:var(--text);color:var(--bg);padding:0.4rem 0;overflow:hidden;display:flex;align-items:center}
-.ticker-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;padding:0 1rem;white-space:nowrap;color:var(--gold);border-right:1px solid rgba(255,255,255,0.2);flex-shrink:0}
-.ticker-track{display:flex;animation:ticker 30s linear infinite;white-space:nowrap}
-.ticker-item{font-size:12px;padding:0 2rem;opacity:0.8}
-@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);transition:background 0.3s}
-.nav-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border)}
+.nav-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);position:relative}
 .logo{font-family:var(--serif);font-size:2rem;font-weight:900;letter-spacing:0.04em;color:var(--text);cursor:pointer}
+@media(min-width:769px){.logo{position:absolute;left:50%;transform:translateX(-50%)}}
 .logo-dot{color:var(--gold)}
-.nav-meta{display:flex;align-items:center;gap:1rem}
+.nav-meta{display:flex;align-items:center;gap:1rem;margin-left:auto}
 .nav-date{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em}
 
 /* BOTÃO */
-[data-theme="light"] .theme-btn{
-  background:transparent;
-  color:#1a1612;
-  border:1.5px solid #1a1612;
-  padding:0.3rem 0.9rem;
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:0.08em;
-  cursor:pointer;
-  border-radius:2px;
-  font-family:var(--sans);
-  outline:none;
-  -webkit-appearance:none;
-  appearance:none;
-}
-[data-theme="dark"] .theme-btn{
-  background:transparent;
-  color:#e8e4dc;
-  border:1.5px solid #e8e4dc;
-  padding:0.3rem 0.9rem;
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:0.08em;
-  cursor:pointer;
-  border-radius:2px;
-  font-family:var(--sans);
-  outline:none;
-  -webkit-appearance:none;
-  appearance:none;
-}
+.theme-btn{background:transparent;border:none;cursor:pointer;font-size:18px;font-weight:700;padding:0;outline:none;-webkit-appearance:none;appearance:none;line-height:1;color:var(--text)}
+.lang-sep{font-size:11px;color:var(--border);margin:0 0.1rem}
+.lang-btn{background:none;border:none;cursor:pointer;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;font-family:var(--sans);padding:0;color:var(--muted)}
+.lang-btn.active{font-weight:700;color:var(--text)}
 
 /* NAV CATS */
-.nav-cats{display:flex;overflow-x:auto;padding:0 2rem}
-.nav-cat{font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);text-decoration:none;padding:0.65rem 1.25rem;border-right:1px solid var(--border);white-space:nowrap;transition:all 0.2s;cursor:pointer;background:none;border-top:none;border-bottom:none;border-left:none;font-family:var(--sans)}
+.nav-cats{display:flex;overflow-x:auto;padding:0 2rem;justify-content:center}
+.nav-cat{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);text-decoration:none;padding:0.4rem 1.25rem;border-right:1px solid var(--border);white-space:nowrap;transition:all 0.2s;cursor:pointer;background:none;border-top:none;border-bottom:2px solid transparent;border-left:none;font-family:var(--sans)}
 .nav-cat:first-child{border-left:1px solid var(--border)}
-.nav-cat:hover,.nav-cat.active{color:var(--accent);background:var(--surface)}
+.nav-cat:hover{color:var(--text);background:var(--surface);border-bottom:2px solid var(--text)}
+.nav-cat.active{color:var(--text);background:var(--surface);border-bottom:2px solid var(--text)}
 .nav-cat.nl{color:var(--gold)}
 .nav-cat.nl:hover{color:var(--gold);background:var(--surface)}
 
-/* MARKET */
-.market-gap{height:16px}
-.market-bar{background:var(--surface);border:1px solid var(--border);border-radius:4px;margin:0 2rem;padding:0.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.quotes{display:flex;align-items:center;gap:0;flex:1}
-.quote{display:flex;align-items:center;gap:0.5rem;padding:0 1.25rem;border-right:1px solid var(--border)}
-.quote:first-child{padding-left:0}
-.quote:last-child{border-right:none}
-.quote-name{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);white-space:nowrap}
-.quote-val{font-size:14px;font-family:var(--serif);font-weight:700;color:var(--text);white-space:nowrap}
-.quote-change{font-size:11px;font-weight:600;white-space:nowrap}
-.up{color:#2a7a3a}.down{color:#c0473a}.neutral{color:var(--muted)}
-.market-time{font-size:10px;color:var(--muted);white-space:nowrap;flex-shrink:0}
-.loading-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pulse 1.2s ease-in-out infinite;display:inline-block;margin-right:4px}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.market-gap-bottom{height:16px}
 
 /* PÁGINAS */
 .page{display:none;min-height:80vh}
@@ -113,80 +68,51 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 .nl-success-sub{font-size:14px;color:var(--muted)}
 
 footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
+
+@media (max-width:768px){
+  nav{position:static;background:none;border-bottom:none}
+  .nav-top{flex-wrap:wrap;justify-content:space-between;align-items:center;padding:0.75rem 1rem;position:static}
+  .nav-date{order:1;flex:1}
+  .nav-meta{order:2;margin-left:0}
+  .logo{order:3;flex:0 0 100%;text-align:center;font-size:1.6rem;padding:0.3rem 0;display:block}
+  .nav-cats{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:0 1rem;justify-content:space-between;width:100%;overflow-x:visible}
+  .nav-cat{font-size:10px;padding:0.4rem 0.5rem}
+  .nl-page{padding:3rem 1rem}
+  .nl-form{max-width:100%}
+}
 </style>
 </head>
 <body>
 
-<div class="ticker">
-  <span class="ticker-label">Últimas</span>
-  <div class="ticker-track">
-    <span class="ticker-item">Fed mantém juros · Dólar sobe ante emergentes</span>
-    <span class="ticker-item">·</span>
-    <span class="ticker-item">Tensões no Mar do Sul da China elevam petróleo</span>
-    <span class="ticker-item">·</span>
-    <span class="ticker-item">BCE sinaliza corte para junho</span>
-    <span class="ticker-item">·</span>
-    <span class="ticker-item">Cúpula G7 debate regulação de IA</span>
-    <span class="ticker-item">·</span>
-    <span class="ticker-item">Fed mantém juros · Dólar sobe ante emergentes</span>
-    <span class="ticker-item">·</span>
-    <span class="ticker-item">Tensões no Mar do Sul da China elevam petróleo</span>
-    <span class="ticker-item">·</span>
-  </div>
-</div>
 
 <nav>
   <div class="nav-top">
+    <span class="nav-date" id="navDate"></span>
     <div class="logo" onclick="showPage('inicio')">Mr. Macro<span class="logo-dot">.</span></div>
     <div class="nav-meta">
-      <span class="nav-date" id="navDate"></span>
-      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☾ Escuro</button>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☾</button>
+      <div style="display:flex;align-items:center;gap:4px">
+        <button class="lang-btn active" id="langPT">PT</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-btn" id="langEN">EN</button>
+      </div>
     </div>
   </div>
   <div class="nav-cats">
     <button class="nav-cat active" onclick="showPage('inicio',this)">Início</button>
-    <button class="nav-cat" onclick="showPage('brasil',this)">Brasil</button>
-    <button class="nav-cat" onclick="showPage('mundo',this)">Mundo</button>
-    <button class="nav-cat" onclick="showPage('economia',this)">Economia</button>
-    <button class="nav-cat" onclick="showPage('tech',this)">Tech</button>
+    <button class="nav-cat" onclick="showPage('noticias',this)">Notícias</button>
+    <button class="nav-cat" onclick="showPage('blog',this)">Blog</button>
     <button class="nav-cat nl" onclick="showPage('newsletter',this)">Newsletter</button>
+    <button class="nav-cat" onclick="showPage('contato',this)">Contato</button>
   </div>
 </nav>
 
-<div class="market-gap"></div>
-<div class="market-bar">
-  <div class="quotes">
-    <div class="quote">
-      <span class="quote-name">USD/BRL</span>
-      <span class="quote-val" id="usd">—</span>
-      <span class="quote-change neutral" id="usd-c"><span class="loading-dot"></span></span>
-    </div>
-    <div class="quote">
-      <span class="quote-name">EUR/BRL</span>
-      <span class="quote-val" id="eur">—</span>
-      <span class="quote-change neutral" id="eur-c"><span class="loading-dot"></span></span>
-    </div>
-    <div class="quote">
-      <span class="quote-name">BTC/USD</span>
-      <span class="quote-val" id="btc">—</span>
-      <span class="quote-change neutral" id="btc-c"><span class="loading-dot"></span></span>
-    </div>
-    <div class="quote">
-      <span class="quote-name">Ouro/USD</span>
-      <span class="quote-val" id="xau">—</span>
-      <span class="quote-change neutral" id="xau-c"><span class="loading-dot"></span></span>
-    </div>
-  </div>
-  <div class="market-time" id="marketTime">Atualizando...</div>
-</div>
-<div class="market-gap-bottom"></div>
 
 <!-- PÁGINAS -->
-<div class="page active" id="page-inicio"><div class="blank">Hero · Conteúdo em desenvolvimento</div></div>
-<div class="page" id="page-brasil"><div class="blank">Brasil · Em desenvolvimento</div></div>
-<div class="page" id="page-mundo"><div class="blank">Mundo · Em desenvolvimento</div></div>
-<div class="page" id="page-economia"><div class="blank">Economia · Em desenvolvimento</div></div>
-<div class="page" id="page-tech"><div class="blank">Tech · Em desenvolvimento</div></div>
+<div class="page active" id="page-inicio"><div class="blank">Início · Em desenvolvimento</div></div>
+<div class="page" id="page-noticias"><div class="blank">Notícias · Em desenvolvimento</div></div>
+<div class="page" id="page-blog"><div class="blank">Blog · Em desenvolvimento</div></div>
+<div class="page" id="page-contato"><div class="blank">Contato · Em desenvolvimento</div></div>
 
 <div class="page" id="page-newsletter">
   <div class="nl-page">
@@ -239,51 +165,13 @@ function subscribe(){
   document.getElementById('nlSuccess').style.display='block';
 }
 
-// Cotações
-function fmt(n,dec=2){return n.toLocaleString('pt-BR',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
-async function fetchQuotes(){
-  try{
-    const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-    const data=await r.json();
-    const usd=data.rates.BRL;
-    const eur=(1/data.rates.EUR)*usd;
-    document.getElementById('usd').textContent=`R$ ${fmt(usd)}`;
-    document.getElementById('eur').textContent=`R$ ${fmt(eur)}`;
-    document.getElementById('usd-c').textContent='● live';
-    document.getElementById('usd-c').className='quote-change up';
-    document.getElementById('eur-c').textContent='● live';
-    document.getElementById('eur-c').className='quote-change up';
-  }catch(e){document.getElementById('usd').textContent='N/D';document.getElementById('eur').textContent='N/D';}
-  try{
-    const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,gold&vs_currencies=usd&include_24hr_change=true');
-    const data=await r.json();
-    const btcPrice=data.bitcoin.usd;
-    const btcChange=data.bitcoin.usd_24h_change;
-    document.getElementById('btc').textContent=`$${(btcPrice/1000).toFixed(1)}k`;
-    const btcEl=document.getElementById('btc-c');
-    btcEl.textContent=`${btcChange>=0?'▲':'▼'} ${Math.abs(btcChange).toFixed(2)}%`;
-    btcEl.className=`quote-change ${btcChange>=0?'up':'down'}`;
-    if(data.gold){
-      const xauPrice=data.gold.usd;
-      const xauChange=data.gold.usd_24h_change;
-      document.getElementById('xau').textContent=`$${fmt(xauPrice,0)}`;
-      const xauEl=document.getElementById('xau-c');
-      xauEl.textContent=`${xauChange>=0?'▲':'▼'} ${Math.abs(xauChange).toFixed(2)}%`;
-      xauEl.className=`quote-change ${xauChange>=0?'up':'down'}`;
-    }
-  }catch(e){document.getElementById('btc').textContent='N/D';document.getElementById('xau').textContent='N/D';}
-  const now=new Date();
-  document.getElementById('marketTime').textContent=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-}
-fetchQuotes();
-setInterval(fetchQuotes,60000);
 
 // Tema
 function toggleTheme(){
   const html=document.documentElement;
   const isDark=html.getAttribute('data-theme')==='dark';
   html.setAttribute('data-theme',isDark?'light':'dark');
-  document.getElementById('themeBtn').textContent=isDark?'☾ Escuro':'☀ Claro';
+  document.getElementById('themeBtn').textContent=isDark?'☾':'☀';
 }
 </script>
 </body>
