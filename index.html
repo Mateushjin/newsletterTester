@@ -95,6 +95,30 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 .nl-success-title{font-family:var(--serif);font-size:1.3rem;color:var(--accent);margin-bottom:0.5rem}
 .nl-success-sub{font-size:14px;color:var(--muted)}
 
+/* NOTÍCIAS */
+.noticias-page{max-width:800px;margin:0 auto;padding:3rem 2rem}
+.noticias-header{border-bottom:2px solid var(--text);padding-bottom:1rem;margin-bottom:2rem}
+.noticias-header h2{font-family:var(--serif);font-size:2rem;font-weight:900}
+.noticias-grid{display:flex;flex-direction:column;gap:0}
+.noticia-card{padding:1.5rem 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s}
+.noticia-card:hover{background:var(--surface);padding-left:0.75rem;padding-right:0.75rem;margin:0 -0.75rem;border-radius:4px}
+.noticia-cat{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);font-weight:700;margin-bottom:0.4rem}
+.noticia-titulo{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:0.5rem}
+.noticia-conteudo{font-size:14px;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.noticia-data{font-size:11px;color:var(--muted);margin-top:0.6rem;text-transform:uppercase;letter-spacing:0.06em}
+.noticias-loading{text-align:center;padding:4rem;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:0.1em}
+.noticias-empty{text-align:center;padding:4rem;color:var(--border);font-size:13px;text-transform:uppercase;letter-spacing:0.1em}
+
+/* MODAL NOTÍCIA */
+.noticia-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center}
+.noticia-modal-overlay.open{display:flex}
+.noticia-modal{background:var(--card);max-width:660px;width:90%;max-height:85vh;overflow-y:auto;padding:2.5rem;position:relative;border-radius:4px}
+.noticia-modal-close{position:absolute;top:1rem;right:1.25rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted);line-height:1}
+.noticia-modal-cat{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);font-weight:700;margin-bottom:0.75rem}
+.noticia-modal-titulo{font-family:var(--serif);font-size:1.8rem;font-weight:900;line-height:1.25;margin-bottom:0.75rem}
+.noticia-modal-data{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.noticia-modal-body{font-size:15px;line-height:1.75;color:var(--text)}
+
 footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
 
 @media (max-width:768px){
@@ -145,7 +169,22 @@ footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:
 
 <!-- PÁGINAS -->
 <div class="page active" id="page-inicio"><div class="blank">Início · Em desenvolvimento</div></div>
-<div class="page" id="page-noticias"><div class="blank">Notícias · Em desenvolvimento</div></div>
+<div class="page" id="page-noticias">
+  <div class="noticias-page">
+    <div class="noticias-header"><h2>Notícias</h2></div>
+    <div class="noticias-grid" id="noticiasGrid"><div class="noticias-loading">Carregando...</div></div>
+  </div>
+</div>
+
+<div class="noticia-modal-overlay" id="noticiaModal">
+  <div class="noticia-modal">
+    <button class="noticia-modal-close" onclick="closeModal()">✕</button>
+    <div class="noticia-modal-cat" id="modalCat"></div>
+    <div class="noticia-modal-titulo" id="modalTitulo"></div>
+    <div class="noticia-modal-data" id="modalData"></div>
+    <div class="noticia-modal-body" id="modalBody"></div>
+  </div>
+</div>
 <div class="page" id="page-blog"><div class="blank">Blog · Em desenvolvimento</div></div>
 <div class="page" id="page-contato"><div class="blank">Contato · Em desenvolvimento</div></div>
 
@@ -281,6 +320,50 @@ document.getElementById('ticker-content').addEventListener('click',function(e){
 fetchQuotes();
 setInterval(fetchQuotes,60000);
 
+
+// Notícias (Supabase)
+const SB_URL='https://hzvmlrvoqhobayaglflf.supabase.co';
+const SB_KEY='sb_publishable_iwt_5ZNlRO0ztSzpLIrFrw_lw9fQ73E';
+
+async function fetchNoticias(){
+  const grid=document.getElementById('noticiasGrid');
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/artigos?order=created_at.desc`,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    const data=await r.json();
+    const valid=data.filter(a=>a.titulo&&a.titulo.trim());
+    if(!valid.length){grid.innerHTML='<div class="noticias-empty">Nenhuma notícia publicada ainda.</div>';return;}
+    grid.innerHTML=valid.map(a=>`
+      <div class="noticia-card" onclick="openModal(${a.id})">
+        <div class="noticia-cat">${a.categoria||'Geral'}</div>
+        <div class="noticia-titulo">${a.titulo}</div>
+        ${a.conteudo?`<div class="noticia-conteudo">${a.conteudo}</div>`:''}
+        <div class="noticia-data">${new Date(a.created_at).toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'})}</div>
+      </div>`).join('');
+    window._noticiasData=valid;
+  }catch(e){grid.innerHTML='<div class="noticias-empty">Erro ao carregar notícias.</div>';}
+}
+
+function openModal(id){
+  const a=window._noticiasData?.find(x=>x.id===id);
+  if(!a)return;
+  document.getElementById('modalCat').textContent=a.categoria||'Geral';
+  document.getElementById('modalTitulo').textContent=a.titulo;
+  document.getElementById('modalData').textContent=new Date(a.created_at).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('modalBody').textContent=a.conteudo||'';
+  document.getElementById('noticiaModal').classList.add('open');
+}
+
+function closeModal(){document.getElementById('noticiaModal').classList.remove('open');}
+document.getElementById('noticiaModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// Carrega ao clicar em Notícias
+const _origShowPage=showPage;
+showPage=function(id,el){
+  _origShowPage(id,el);
+  if(id==='noticias'&&!window._noticiasData)fetchNoticias();
+};
 
 // Tema
 function toggleTheme(){
