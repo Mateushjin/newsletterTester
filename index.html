@@ -24,7 +24,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);transition:b
 #ticker-bar{background:var(--accent);color:#fff;font-size:11px;display:flex;align-items:center;overflow:hidden;z-index:101;position:relative}
 #ticker-label{flex-shrink:0;padding:0.4rem 1rem;font-weight:600;border-right:1px solid rgba(255,255,255,0.3);white-space:nowrap;letter-spacing:0.08em;font-size:10px;text-transform:uppercase}
 #ticker-track{flex:1;overflow:hidden;padding:0.4rem 0}
-#ticker-content{display:inline-block;white-space:nowrap;animation:tickerScroll 30s linear infinite;transition:opacity 0.15s ease}
+#ticker-content{display:inline-block;white-space:nowrap;width:max-content;animation:tickerScroll 30s linear infinite;transition:opacity 0.15s ease}
 #ticker-content:hover{animation-play-state:paused}
 .tc-wrap{position:relative;display:inline-block;cursor:pointer;overflow:hidden;height:1.2em;vertical-align:middle}
 .tc-inner{display:block;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)}
@@ -98,11 +98,11 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
 
 @media (max-width:768px){
-  nav{position:static;background:none;border-bottom:none}
+  nav{position:static;background:var(--bg);border-bottom:1px solid var(--border)}
   .nav-top{flex-wrap:wrap;justify-content:space-between;align-items:center;padding:0.75rem 1rem;position:static}
   .nav-date{order:1;flex:1}
   .nav-meta{order:2;margin-left:0}
-  .logo{order:3;flex:0 0 100%;text-align:center;font-size:1.6rem;padding:0.3rem 0;display:block}
+  .logo{order:3;flex:0 0 100%;text-align:center;font-size:1.6rem;padding:0.3rem 0;display:block;position:static;transform:none}
   .nav-cats{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:0 1rem;justify-content:space-between;width:100%;overflow-x:visible}
   .nav-cat{font-size:10px;padding:0.4rem 0.5rem}
   .nl-page{padding:3rem 1rem}
@@ -114,7 +114,7 @@ footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:
 
 
 <div id="ticker-bar">
-  <div id="ticker-label">Cotações •</div>
+  <div id="ticker-label">Mercado •</div>
   <div id="ticker-track"><div id="ticker-content"></div></div>
 </div>
 <nav>
@@ -174,8 +174,16 @@ footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:
 
 <script>
 // Data
-const d=new Date();
-document.getElementById('navDate').textContent=d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+function updateDate(){
+  const d=new Date();
+  const mobile=window.innerWidth<=768;
+  document.getElementById('navDate').textContent=mobile
+    ?d.toLocaleDateString('pt-BR')
+    :d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+document.getElementById('themeBtn').textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀':'☾';
+updateDate();
+window.addEventListener('resize',updateDate);
 
 // Navegação
 function showPage(id,el){
@@ -229,7 +237,7 @@ function renderTicker(){
   const sep='<span style="margin:0 1.5rem;opacity:0.4">•</span>';
   const content=items.join(sep);
   const el=document.getElementById('ticker-content');
-  el.innerHTML=content+sep+content+sep;
+  el.innerHTML=content+content;
 }
 
 async function fetchQuotes(){
@@ -258,6 +266,7 @@ document.getElementById('ticker-content').addEventListener('click',function(e){
 
 fetchQuotes();
 setInterval(fetchQuotes,60000);
+
 
 // Tema
 function toggleTheme(){
