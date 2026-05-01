@@ -20,11 +20,22 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);transition:background 0.3s,color 0.3s;min-height:100vh}
 
 
+/* TICKER */
+#ticker-bar{background:var(--accent);color:#fff;font-size:11px;display:flex;align-items:center;overflow:hidden;z-index:101;position:relative}
+#ticker-label{flex-shrink:0;padding:0.4rem 1rem;font-weight:600;border-right:1px solid rgba(255,255,255,0.3);white-space:nowrap;letter-spacing:0.08em;font-size:10px;text-transform:uppercase}
+#ticker-track{flex:1;overflow:hidden;padding:0.4rem 0}
+#ticker-content{display:inline-block;white-space:nowrap;animation:tickerScroll 30s linear infinite;transition:opacity 0.15s ease}
+#ticker-content:hover{animation-play-state:paused}
+.tc-wrap{position:relative;display:inline-block;cursor:pointer;overflow:hidden;height:1.2em;vertical-align:middle}
+.tc-inner{display:block;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)}
+.tc-wrap.active .tc-inner{transform:translateY(-50%)}
+.tc-row{display:block;line-height:1.2em;white-space:nowrap}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);transition:background 0.3s}
 .nav-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);position:relative}
-.logo{font-family:var(--serif);font-size:2rem;font-weight:900;letter-spacing:0.04em;color:var(--text);cursor:pointer}
-@media(min-width:769px){.logo{position:absolute;left:50%;transform:translateX(-50%)}}
+.logo{font-family:var(--serif);font-size:2rem;font-weight:900;letter-spacing:0.04em;color:var(--text);cursor:pointer;position:absolute;left:50%;transform:translateX(-50%)}
 .logo-dot{color:var(--gold)}
 .nav-meta{display:flex;align-items:center;gap:1rem;margin-left:auto}
 .nav-date{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em}
@@ -37,13 +48,30 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 
 /* NAV CATS */
 .nav-cats{display:flex;overflow-x:auto;padding:0 2rem;justify-content:center}
-.nav-cat{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);text-decoration:none;padding:0.4rem 1.25rem;border-right:1px solid var(--border);white-space:nowrap;transition:all 0.2s;cursor:pointer;background:none;border-top:none;border-bottom:2px solid transparent;border-left:none;font-family:var(--sans)}
+.nav-cat{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);text-decoration:none;padding:0.4rem 1.25rem;border-right:1px solid var(--border);white-space:nowrap;transition:all 0.2s;cursor:pointer;background:none;border-top:none;border-bottom:2px solid transparent;border-left:none;font-family:var(--sans);flex:1;text-align:center}
 .nav-cat:first-child{border-left:1px solid var(--border)}
 .nav-cat:hover{color:var(--text);background:var(--surface);border-bottom:2px solid var(--text)}
 .nav-cat.active{color:var(--text);background:var(--surface);border-bottom:2px solid var(--text)}
 .nav-cat.nl{color:var(--gold)}
 .nav-cat.nl:hover{color:var(--gold);background:var(--surface)}
 
+
+/* MARKET BAR */
+.market-bar{background:var(--surface);border:1px solid var(--border);border-radius:4px;margin:1rem 2rem;padding:0;display:flex;align-items:stretch}
+.quote{display:flex;align-items:center;gap:0.5rem;padding:0 1.25rem;border-right:1px solid var(--border);box-sizing:border-box}
+.quote:last-child{border-right:none}
+.quote-name{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);white-space:nowrap}
+.quote-val{font-size:15px;font-family:var(--serif);font-weight:700;color:var(--text);white-space:nowrap}
+.quote-change{font-size:12px;font-weight:600;white-space:nowrap}
+.up{color:#2a7a3a}.down{color:#c0473a}.neutral{color:var(--muted)}
+.loading-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pulse 1.2s ease-in-out infinite;display:inline-block;margin-right:4px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+/* FLIP */
+.quote.flip-card{position:relative;height:2.8rem;min-width:160px;cursor:pointer;perspective:800px}
+.flip-inner{position:absolute;inset:0;transition:transform 0.55s ease;transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;display:flex;align-items:center;gap:0.5rem;padding:0 1.25rem}
+.flip-back{transform:rotateY(180deg)}
 
 /* PÁGINAS */
 .page{display:none;min-height:80vh}
@@ -85,6 +113,10 @@ footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:
 <body>
 
 
+<div id="ticker-bar">
+  <div id="ticker-label">Cotações •</div>
+  <div id="ticker-track"><div id="ticker-content"></div></div>
+</div>
 <nav>
   <div class="nav-top">
     <span class="nav-date" id="navDate"></span>
@@ -165,6 +197,67 @@ function subscribe(){
   document.getElementById('nlSuccess').style.display='block';
 }
 
+
+// Cotações + Ticker
+function fmt(n,dec=2){return n.toLocaleString('pt-BR',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function arrow(v){return v>=0?'↑':'↓'}
+function arrowColor(v){return v>=0?'#90EE90':'#FFB3B3'}
+
+const tData={};
+
+function tickerStatic(label,val){
+  return `<span style="margin:0 2rem">${label} <strong>${val}</strong></span>`;
+}
+function tickerCrypto(cls,usdLbl,usdVal,brlLbl,brlVal,chg){
+  const a=arrow(chg),c=arrowColor(chg);
+  const chgHtml=`<span style="color:${c}">(${a} ${chg>=0?'+':''}${Math.abs(chg).toFixed(2)}%)</span>`;
+  return `<span class="tc-wrap ${cls}" style="margin:0 2rem"><span class="tc-inner"><span class="tc-row">${usdLbl} <strong>${usdVal}</strong> ${chgHtml}</span><span class="tc-row">${brlLbl} <strong>${brlVal}</strong> ${chgHtml}</span></span></span>`;
+}
+
+function renderTicker(){
+  const items=[];
+  if(tData.usd) items.push(tickerStatic('USD/BRL','R$ '+fmt(tData.usd)));
+  if(tData.eur) items.push(tickerStatic('EUR/BRL','R$ '+fmt(tData.eur)));
+  if(tData.btc){
+    const b=tData.btc;
+    items.push(tickerCrypto('ticker-btc','BTC/USD','$'+fmt(b.usd,0),'BTC/BRL','R$'+fmt(b.brl,0),b.chg));
+  }
+  if(tData.eth){
+    const e=tData.eth;
+    items.push(tickerCrypto('ticker-eth','ETH/USD','$'+fmt(e.usd,0),'ETH/BRL','R$'+fmt(e.brl,0),e.chg));
+  }
+  const sep='<span style="margin:0 1.5rem;opacity:0.4">•</span>';
+  const content=items.join(sep);
+  const el=document.getElementById('ticker-content');
+  el.innerHTML=content+sep+content+sep;
+}
+
+async function fetchQuotes(){
+  try{
+    const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const d=await r.json();
+    tData.usd=d.rates.BRL;
+    tData.eur=(1/d.rates.EUR)*tData.usd;
+  }catch(e){}
+  try{
+    const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd,brl&include_24hr_change=true');
+    const d=await r.json();
+    tData.btc={usd:d.bitcoin.usd,brl:d.bitcoin.brl,chg:d.bitcoin.usd_24h_change};
+    tData.eth={usd:d.ethereum.usd,brl:d.ethereum.brl,chg:d.ethereum.usd_24h_change};
+  }catch(e){}
+  renderTicker();
+}
+
+document.getElementById('ticker-content').addEventListener('click',function(e){
+  const wrap=e.target.closest('.tc-wrap');
+  if(!wrap)return;
+  const isActive=wrap.classList.contains('active');
+  const cls=[...wrap.classList].find(c=>c.startsWith('ticker-'));
+  document.querySelectorAll('#ticker-content .'+cls).forEach(el=>el.classList.toggle('active',!isActive));
+});
+
+fetchQuotes();
+setInterval(fetchQuotes,60000);
 
 // Tema
 function toggleTheme(){
