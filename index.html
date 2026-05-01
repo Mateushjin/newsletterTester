@@ -118,6 +118,11 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 .noticia-modal-titulo{font-family:var(--serif);font-size:1.8rem;font-weight:900;line-height:1.25;margin-bottom:0.75rem}
 .noticia-modal-data{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
 .noticia-modal-body{font-size:15px;line-height:1.75;color:var(--text)}
+.noticia-modal-body h2{font-family:var(--serif);font-size:1.2rem;font-weight:700;margin:1.5rem 0 0.5rem}
+.noticia-modal-body h2:first-child{margin-top:0}
+.noticia-modal-body p{margin-bottom:0.75rem}
+.noticia-modal-body hr{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.noticia-modal-body a{color:var(--accent);text-decoration:underline;font-size:13px}
 
 footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
 
@@ -351,7 +356,7 @@ function openModal(id){
   document.getElementById('modalCat').textContent=a.categoria||'Geral';
   document.getElementById('modalTitulo').textContent=a.titulo;
   document.getElementById('modalData').textContent=new Date(a.created_at).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('modalBody').textContent=a.conteudo||'';
+  document.getElementById('modalBody').innerHTML=a.conteudo||'';
   document.getElementById('noticiaModal').classList.add('open');
 }
 
