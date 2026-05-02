@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(curl -s 'https://hzvmlrvoqhobayaglflf.supabase.co/rest/v1/artigos?id=eq.48&limit=1' -H 'apikey: sb_publishable_iwt_5ZNlRO0ztSzpLIrFrw_lw9fQ73E' -H 'Authorization: Bearer sb_publishable_iwt_5ZNlRO0ztSzpLIrFrw_lw9fQ73E')",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\)[0]; print\\(list\\(d.keys\\(\\)\\)\\)\")",
+      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\); const obj=JSON.parse\\(d\\)[0]; console.log\\(Object.keys\\(obj\\).join\\(', '\\)\\)\")",
+      "Bash(curl -s 'https://hzvmlrvoqhobayaglflf.supabase.co/rest/v1/artigos?id=eq.40&limit=1&select=*' -H 'apikey: sb_publishable_iwt_5ZNlRO0ztSzpLIrFrw_lw9fQ73E' -H 'Authorization: Bearer sb_publishable_iwt_5ZNlRO0ztSzpLIrFrw_lw9fQ73E')",
+      "Bash(curl -s 'https://hzvmlrvoqhobayaglflf.supabase.co/rest/v1/artigos?id=eq.48&limit=1&select=*' -H 'apikey: sb_publishable_iwt_5ZNlRO0ztSzpLIrFrw_lw9fQ73E' -H 'Authorization: Bearer sb_publishable_iwt_5ZNlRO0ztSzpLIrFrw_lw9fQ73E')",
+      "Bash(git pull *)"
+    ]
+  }
+}

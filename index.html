@@ -246,15 +246,32 @@ function showPage(id,el){
 }
 
 // Newsletter
-function subscribe(){
-  const email=document.getElementById('nlEmail').value;
-  if(!email||!email.includes('@')){
-    document.getElementById('nlEmail').style.borderColor='#c0473a';
-    return;
+async function subscribe(){
+  const emailEl=document.getElementById('nlEmail');
+  const btn=document.querySelector('.nl-submit');
+  const email=emailEl.value;
+  if(!email||!email.includes('@')){emailEl.style.borderColor='#c0473a';return;}
+  btn.textContent='Aguarde...';
+  btn.disabled=true;
+  try{
+    const r=await fetch(`${SB_URL}/functions/v1/cadastrar-lead`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SB_KEY},
+      body:JSON.stringify({email})
+    });
+    if(r.ok||r.status===409){
+      document.getElementById('nlForm').style.display='none';
+      document.getElementById('nlPerks').style.display='none';
+      document.getElementById('nlSuccess').style.display='block';
+    }else{
+      btn.textContent='Quero receber →';
+      btn.disabled=false;
+      emailEl.style.borderColor='#c0473a';
+    }
+  }catch(e){
+    btn.textContent='Quero receber →';
+    btn.disabled=false;
   }
-  document.getElementById('nlForm').style.display='none';
-  document.getElementById('nlPerks').style.display='none';
-  document.getElementById('nlSuccess').style.display='block';
 }
 
 
