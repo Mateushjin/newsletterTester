@@ -264,8 +264,9 @@ async function subscribe(){
   if(!email||!email.includes('@')){emailEl.style.borderColor='#c0473a';return;}
   btn.textContent='Aguarde...';
   btn.disabled=true;
+  document.getElementById('nlPopup').classList.add('open');
   try{
-    const r=await fetch(`${SB_URL}/functions/v1/cadastrar-lead`,{
+    await fetch(`${SB_URL}/functions/v1/cadastrar-lead`,{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
@@ -274,10 +275,7 @@ async function subscribe(){
       },
       body:JSON.stringify({email})
     });
-    document.getElementById('nlPopup').classList.add('open');
   }catch(e){
-    btn.textContent='Quero receber →';
-    btn.disabled=false;
   }
 }
 
