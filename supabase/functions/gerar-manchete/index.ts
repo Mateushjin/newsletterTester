@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
       messages: [
         {
           role: 'system',
-          content: 'Você é um editor sênior de newsletter de geopolítica. Leia o conteúdo abaixo e escreva UMA manchete jornalística em português, objetiva e impactante, com no máximo 12 palavras. Escolha o fato mais importante. Responda APENAS com a manchete, sem aspas, sem ponto final, sem explicações.',
+          content: 'You are a senior geopolitics newsletter editor. Read the content below and write ONE headline in English, objective and impactful, maximum 12 words. Choose the single most important fact. Reply ONLY with the headline, no quotes, no period, no explanation.',
         },
         {
           role: 'user',
