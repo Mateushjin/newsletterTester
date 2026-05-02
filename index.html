@@ -218,7 +218,7 @@ footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:
     <h1 class="nl-page-title">Receba o Mr. Macro no seu email</h1>
     <p class="nl-page-sub">Análises sobre geopolítica, economia política e tecnologia — direto na sua caixa de entrada, todos os dias. Sem spam. Cancele quando quiser.</p>
     <div class="nl-form" id="nlForm">
-      <input class="nl-input" type="email" id="nlEmail" placeholder="seu@email.com">
+      <input class="nl-input" type="email" id="nlEmail" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')subscribe()">
       <button class="nl-submit" onclick="subscribe()">Quero receber →</button>
     </div>
     <div class="nl-perks" id="nlPerks">
