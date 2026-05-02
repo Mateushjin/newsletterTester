@@ -384,7 +384,7 @@ document.getElementById('noticiaModal').addEventListener('click',function(e){if(
 const _origShowPage=showPage;
 showPage=function(id,el){
   _origShowPage(id,el);
-  if(id==='noticias'&&!window._noticiasData)fetchNoticias();
+  if(id==='noticias')fetchNoticias();
 };
 
 // Tema
