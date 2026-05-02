@@ -195,7 +195,7 @@ footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:
     <div class="nl-popup-icon">✉️</div>
     <div class="nl-success-title">Email cadastrado com sucesso!</div>
     <div class="nl-success-sub">Você está na lista do Mr. Macro. A próxima edição chega direto na sua caixa de entrada.</div>
-    <button class="nl-popup-close" onclick="document.getElementById('nlPopup').classList.remove('open');document.querySelector('.nl-submit').textContent='Quero receber →';document.querySelector('.nl-submit').disabled=false;document.getElementById('nlEmail').value='';">Fechar</button>
+    <button class="nl-popup-close" onclick="closeNlPopup()">Fechar</button>
   </div>
 </div>
 
@@ -420,8 +420,11 @@ function openModal(id,catKey){
 
 function renderModalCats(){}
 
+function closeNlPopup(){document.getElementById('nlPopup').classList.remove('open');document.querySelector('.nl-submit').textContent='Quero receber →';document.querySelector('.nl-submit').disabled=false;document.getElementById('nlEmail').value='';}
+document.getElementById('nlPopup').addEventListener('click',function(e){if(e.target===this)closeNlPopup();});
 function closeModal(){document.getElementById('noticiaModal').classList.remove('open');}
 document.getElementById('noticiaModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeNlPopup();}});
 
 // Carrega ao clicar em Notícias
 const _origShowPage=showPage;
