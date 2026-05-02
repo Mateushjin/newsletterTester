@@ -256,18 +256,16 @@ async function subscribe(){
   try{
     const r=await fetch(`${SB_URL}/functions/v1/cadastrar-lead`,{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SB_KEY},
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':SB_KEY,
+        'Authorization':'Bearer '+SB_KEY
+      },
       body:JSON.stringify({email})
     });
-    if(r.ok||r.status===409){
-      document.getElementById('nlForm').style.display='none';
-      document.getElementById('nlPerks').style.display='none';
-      document.getElementById('nlSuccess').style.display='block';
-    }else{
-      btn.textContent='Quero receber →';
-      btn.disabled=false;
-      emailEl.style.borderColor='#c0473a';
-    }
+    document.getElementById('nlForm').style.display='none';
+    document.getElementById('nlPerks').style.display='none';
+    document.getElementById('nlSuccess').style.display='block';
   }catch(e){
     btn.textContent='Quero receber →';
     btn.disabled=false;
