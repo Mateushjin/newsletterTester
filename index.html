@@ -338,6 +338,11 @@ const CATS=[{key:'geopolitica',label:'Geopolítica'},{key:'brasil',label:'Brasil
 
 function edicaoTitulo(a){
   if(a.titulo&&a.titulo.trim())return a.titulo.trim();
+  const col=CATS.find(c=>a[c.key]&&a[c.key].trim());
+  if(col){
+    const m=a[col.key].match(/<h2[^>]*>([^<]+)<\/h2>/i);
+    if(m)return m[1].trim();
+  }
   const d=a.data_edicao?new Date(a.data_edicao+'T12:00:00'):new Date(a.created_at);
   return 'Mr. Macro — '+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
 }
