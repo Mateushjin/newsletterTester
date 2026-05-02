@@ -266,13 +266,9 @@ async function subscribe(){
   btn.disabled=true;
   document.getElementById('nlPopup').classList.add('open');
   try{
-    await fetch(`${SB_URL}/functions/v1/cadastrar-lead`,{
+    await fetch(`${SB_URL}/functions/v1/bright-service`,{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'apikey':SB_KEY,
-        'Authorization':'Bearer '+SB_KEY
-      },
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email})
     });
   }catch(e){
