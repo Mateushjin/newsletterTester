@@ -195,7 +195,7 @@ footer{padding:1.5rem 2rem;display:flex;justify-content:space-between;font-size:
     <div class="nl-popup-icon">✉️</div>
     <div class="nl-success-title">Email cadastrado com sucesso!</div>
     <div class="nl-success-sub">Você está na lista do Mr. Macro. A próxima edição chega direto na sua caixa de entrada.</div>
-    <button class="nl-popup-close" onclick="document.getElementById('nlPopup').classList.remove('open')">Fechar</button>
+    <button class="nl-popup-close" onclick="document.getElementById('nlPopup').classList.remove('open');document.querySelector('.nl-submit').textContent='Quero receber →';document.querySelector('.nl-submit').disabled=false;document.getElementById('nlEmail').value='';">Fechar</button>
   </div>
 </div>
 
